@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Deps: fress:0.3.1">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/fress/fress/0.3.1/fress-0.3.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

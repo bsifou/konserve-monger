@@ -1,11 +1,11 @@
-# konserve-clutch
+# konserve-monger
 
 A CouchDB implementation of the [konserve kv-protocol](https://github.com/replikativ/konserve) on top of [clutch](https://github.com/clojure-clutch/clutch).
 
 ## Usage
 
 Add to your leiningen dependencies:
-[![Clojars Project](http://clojars.org/io.replikativ/konserve-clutch/latest-version.svg)](http://clojars.org/io.replikativ/konserve-clutch)
+[![Clojars Project](http://clojars.org/io.replikativ/konserve-monger/latest-version.svg)](http://clojars.org/io.replikativ/konserve-monger)
 
 The whole purpose of konserve is to have a unified associative key-value interface for
 edn datastructures. Just use the standard interface functions of konserve.
@@ -16,7 +16,7 @@ serialization protocol for the store, so you can still access the store through
 clutch directly wherever you need.
 
 ~~~clojure
-  (require '[konserve-clutch.core :refer :all]
+  (require '[konserve-monger.core :refer :all]
            '[konserve.core :as k)
   (def couch-store (<!! (new-clutch-store "my-store")))
 
