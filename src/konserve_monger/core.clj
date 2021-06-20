@@ -53,9 +53,26 @@
 (defn nsed-keyword? [s]
   (= (count (str/split (str s) #"/")) 2))
 
+(defn adapt-types-in [k]
+  (cond (qualified-keyword? k)
+        (str (namespace k) "/" (name k))
+        (uuid? k) (str k)
+        :else
+        k))
+
+(defn adapt-types-out [k]
+  (try (UUID/fromString (str k))
+       (catch Exception e
+         #_(println "ERROR KEY IS " k)
+         (let [k2 (keyword k)]
+           (cond (qualified-keyword? k2)
+                k2
+                :else
+                k)))))
+
 (defn adapt-keyword-in [k]
-  (cond (nsed-keyword? k)
-        (apply str (rest (str k)))
+  (cond (qualified-keyword? k)
+        (str (namespace k) "/" (name k))
         (uuid? k) (str k)
         :else
         k))
@@ -67,12 +84,18 @@
          (cond (nsed-keyword? k)
                (keyword k)
                :else
-               k))))
+               (keyword k)))))
 
 (defn adapt-v-in [v]
   (if (and (vector? v)
            (= (count v) 2)
            (nsed-keyword? (first v)))
+    (assoc v 0 (adapt-keyword-in (first v)))
+    (adapt-keyword-in v)))
+
+
+(defn adapt-v-in2 [v]
+  (if (sequential? )
     (assoc v 0 (adapt-keyword-in (first v)))
     (adapt-keyword-in v)))
 
@@ -84,7 +107,7 @@
   "Recursively transforms all map keys from keywords to strings."
   {:added "1.1"}
   [m]
-  (let [f (fn [[k v]] [(adapt-keyword-in k) (adapt-v-in v)])]
+  (let [f (fn [[k v]] [(adapt-types-in k) (clojure.walk/postwalk adapt-types-in v)])]
     ;; only apply to maps
     (clojure.walk/postwalk (fn [x] (cond (map? x)
                                          (into {} (map f x))
@@ -109,7 +132,7 @@
   "Recursively transforms all map keys from keywords to strings."
   {:added "1.1"}
   [m]
-  (let [f (fn [[k v]] [(adapt-keyword-out k) (adapt-v-out v)])]
+  (let [f (fn [[k v]] [(adapt-types-out k) (clojure.walk/postwalk adapt-types-out v)])]
     ;; only apply to maps
     (clojure.walk/postwalk (fn [x] (if (map? x) (into {} (map f x)) x)) m)))
 
