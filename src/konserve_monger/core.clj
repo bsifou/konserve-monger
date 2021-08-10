@@ -66,9 +66,9 @@
          #_(println "ERROR KEY IS " k)
          (let [k2 (keyword k)]
            (cond (qualified-keyword? k2)
-                k2
-                :else
-                k)))))
+                 k2
+                 :else
+                 k)))))
 
 (defn adapt-keyword-in [k]
   (cond (qualified-keyword? k)
@@ -224,7 +224,7 @@
       :or   {serializer     (ser/fressian-serializer)
              read-handlers  (atom {})
              write-handlers (atom {})
-             conn-url       "mongodb://127.0.0.1:27017/db0"
+             ;; conn-url       "mongodb://127.0.0.1:27017/db0"
              coll-opts      {:name "konserve"
                              :opts {}}}}]
 
@@ -247,57 +247,61 @@
 ;; REPL
 
 
-(def conn-url "mongodb://127.0.0.1:27017/db0")
-(def connection (mg/connect-via-uri conn-url))
-(def db (:db connection))
-(def conn (:conn connection))
-(def uuid2 (uuid))
-(def store (<!! (new-monger-store)))
-(def fs-store (<!! (new-fs-store "/tmp/store")))
 
-(deftest monger-store-test
-  (testing "Test the couchdb store functionality."
-    (let []
-      ;; writes
-      
-      (<!! (k/dissoc store :account/id))
-      (<!! (k/dissoc fs-store :account/id))
 
-      (is (= (<!! (k/assoc-in store [:account/id uuid2] {:account/name "test"}))
-             (<!! (k/assoc-in fs-store [:account/id uuid2] {:account/name "test"}))))
-
-      (is (= (<!! (k/assoc-in store [:account/id uuid2 :account/name] "test2"))
-             (<!! (k/assoc-in fs-store [:account/id uuid2 :account/name] "test2"))))
-
-      (is (= (<!! (k/get-in store [:account/id uuid2 :account/name]))
-             (<!! (k/get-in fs-store [:account/id uuid2 :account/name]))))
-
-      (is (= (<!! (k/get-in store [:account/id uuid2 :account/name]))
-             (<!! (k/get-in fs-store [:account/id uuid2 :account/name]))))
-
-      (is (= (<!! (k/update-in store [:account/id uuid2] merge {:account/name "test3"}))
-             (<!! (k/update-in fs-store [:account/id uuid2] merge {:account/name "test3"}))))
-
-      (is (= (<!! (k/assoc-in store [:account/id uuid2] {:account/addresses [[:address/id #uuid "ffffffff-ffff-ffff-ffff-000000000001"]]}))
-             (<!! (k/assoc-in fs-store [:account/id uuid2] {:account/addresses [[:address/id #uuid "ffffffff-ffff-ffff-ffff-000000000001"]]}))))
-
-      ;; reads
-
-      (is (= (<!! (k/get-in store [:account/id]))
-             (<!! (k/get-in fs-store [:account/id]))))
-
-      (is (= (<!! (k/get-in store [:account/id uuid2]))
-             (<!! (k/get-in fs-store [:account/id uuid2]))))
-
-      (is (= (<!! (k/get-in store [:account/id uuid2 :account/addresses]))
-             (<!! (k/get-in fs-store [:account/id uuid2 :account/addresses])))))))
 
 (comment
+
+  (def conn-url "mongodb://127.0.0.1:27017/db0")
+  (def connection (mg/connect-via-uri conn-url))
+  (def db (:db connection))
+  (def conn (:conn connection))
+  (def uuid2 (uuid))
+  (def store (<!! (new-monger-store)))
+  (def fs-store (<!! (new-fs-store "/tmp/store")))
+
+
+  (deftest monger-store-test
+    (testing "Test the couchdb store functionality."
+      (let []
+        ;; writes
+        
+        (<!! (k/dissoc store :account/id))
+        (<!! (k/dissoc fs-store :account/id))
+
+        (is (= (<!! (k/assoc-in store [:account/id uuid2] {:account/name "test"}))
+               (<!! (k/assoc-in fs-store [:account/id uuid2] {:account/name "test"}))))
+
+        (is (= (<!! (k/assoc-in store [:account/id uuid2 :account/name] "test2"))
+               (<!! (k/assoc-in fs-store [:account/id uuid2 :account/name] "test2"))))
+
+        (is (= (<!! (k/get-in store [:account/id uuid2 :account/name]))
+               (<!! (k/get-in fs-store [:account/id uuid2 :account/name]))))
+
+        (is (= (<!! (k/get-in store [:account/id uuid2 :account/name]))
+               (<!! (k/get-in fs-store [:account/id uuid2 :account/name]))))
+
+        (is (= (<!! (k/update-in store [:account/id uuid2] merge {:account/name "test3"}))
+               (<!! (k/update-in fs-store [:account/id uuid2] merge {:account/name "test3"}))))
+
+        (is (= (<!! (k/assoc-in store [:account/id uuid2] {:account/addresses [[:address/id #uuid "ffffffff-ffff-ffff-ffff-000000000001"]]}))
+               (<!! (k/assoc-in fs-store [:account/id uuid2] {:account/addresses [[:address/id #uuid "ffffffff-ffff-ffff-ffff-000000000001"]]}))))
+
+        ;; reads
+
+        (is (= (<!! (k/get-in store [:account/id]))
+               (<!! (k/get-in fs-store [:account/id]))))
+
+        (is (= (<!! (k/get-in store [:account/id uuid2]))
+               (<!! (k/get-in fs-store [:account/id uuid2]))))
+
+        (is (= (<!! (k/get-in store [:account/id uuid2 :account/addresses]))
+               (<!! (k/get-in fs-store [:account/id uuid2 :account/addresses])))))))
   ;; tests for writes
 
   ;; assoc in
 
-        ;; test for get ins)))
+  ;; test for get ins)))
 
 
   (<!! (k/get-in store ["item0"]))
@@ -312,7 +316,7 @@
 
   (<!! (k/assoc-in store ["item" :test] {:a 1 :c 2}))
 
-  ;(<!! (k/get-in store1 ["item"]))
+                                        ;(<!! (k/get-in store1 ["item"]))
 
 
   (<!! (k/update-in store ["item" :my-name/key] 7))
