@@ -1,5 +1,4 @@
 # konserve-monger
-<<<<<<< HEAD
 =======
 
 A CouchDB implementation of the [konserve kv-protocol](https://github.com/replikativ/konserve) on top of [clutch](https://github.com/clojure-clutch/clutch).
